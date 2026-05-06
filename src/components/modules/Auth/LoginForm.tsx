@@ -132,7 +132,7 @@ const LoginForm = ({ redirectPath }: LoginFormProps) => {
                         selector={(s) => [s.canSubmit, s.isSubmitting] as const}
                     >
                         {([canSubmit, isSubmitting]) => (
-                            <AppSubmitButton isPending={isSubmitting || isPending} pendingLabel="Logging In...." disabled={!canSubmit}>
+                            <AppSubmitButton className="cursor-pointer" isPending={isSubmitting || isPending} pendingLabel="Logging In...." disabled={!canSubmit}>
                                 Log In
                             </AppSubmitButton>
                         )}
@@ -141,16 +141,16 @@ const LoginForm = ({ redirectPath }: LoginFormProps) => {
 
                 <div className="relative my-6">
                     <div className="absolute inset-0 flex items-center">
-                        <div className="w-full border-t border-gray-300"></div>
+                        <div className="w-full border-t border-border"></div>
                     </div>
                     <div className="relative flex justify-center text-sm">
-                        <span className="px-2 bg-white text-gray-500">
+                        <span className="px-2 bg-background text-muted-foreground">
                             Or continue with
                         </span>
                     </div>
                 </div>
 
-                <Button variant="outline" className="w-full" onClick={() => {
+                <Button variant="outline" className="w-full cursor-pointer" onClick={() => {
                     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
                     //TODO redirect path after login in frontend
                     window.location.href = `${baseUrl}/auth/login/google`;

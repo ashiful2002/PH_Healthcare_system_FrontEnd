@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtUtils } from "./lib/jwtUtils";
 import { getDefaultDashboardRoute, getRouteOwner, isAuthRoute, UserRole } from "./lib/authUtils";
-import { getNewTokensWithRefreshToken } from "./services/auth.services";
+import { getNewTokensWithRefreshToken, getUserInfo } from "./services/auth.services";
 import { isTokenExpiringSoon } from "./lib/tokenUtils";
 
 
@@ -73,16 +73,38 @@ export async function proxy(request: NextRequest) {
         }
         return response
     }
-
-
-
-
-
-
-
     //  case -1 : user is logged in and trying to access auth routes
     if (isAuth && isValidAccessToken) {
         return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as UserRole), request.url));
+    }
+
+    if (pathname === "/reset-password") {
+        const email = request.nextUrl.searchParams.get("email");
+        const token = request.nextUrl.searchParams.get("token");
+
+
+        // case 1: user has needPasswordChange = true and trying to access reset-password route
+        if (accessToken && email) {
+            const userInfo = await getUserInfo();
+
+            if (userInfo.needPasswordChange) {
+                return NextResponse.next()
+            } else {
+                return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as UserRole), request.url));
+            }
+        }
+
+        // case 2: user comming from forgot password 
+        if (email) {
+            return NextResponse.next()
+        }
+
+        // case 3: user trying to access reset-password route without email and token
+        const loginUrl = new URL("/login", request.url)
+        loginUrl.searchParams.set("redirect", pathname)
+        return NextResponse.redirect(loginUrl)
+
+
     }
 
     // case 2: user trying to access public route  > allow 
@@ -96,6 +118,40 @@ export async function proxy(request: NextRequest) {
         loginUrl.searchParams.set("redirect", pathname)
         return NextResponse.redirect(loginUrl)
     }
+
+    // case: 4 enforce user to change password
+
+    if (accessToken) {
+        const userInfo = await getUserInfo();
+
+        if (userInfo?.emailVerified === false) {
+            if (pathname !== "/verify-email") {
+                const veeifyEmailUrl = new URL("/verify-email", request.url)
+                veeifyEmailUrl.searchParams.set("email", userInfo.email)
+                return NextResponse.redirect(veeifyEmailUrl)
+            }
+            return NextResponse.next();
+        }
+
+        if (userInfo && userInfo.emailVerified && pathname === "/verify-email") {
+            return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as UserRole), request.url));
+        }
+
+        if (userInfo.needPasswordChange) {
+            if (pathname !== "/reset-password") {
+                const resetPasswordUrl = new URL("/reset-password", request.url)
+                resetPasswordUrl.searchParams.set("email", userInfo.email)
+                return NextResponse.redirect(resetPasswordUrl);
+            }
+            return NextResponse.next();
+        }
+
+
+        if (userInfo && !userInfo.needPasswordChange && pathname === "/reset-password") {
+            return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as UserRole), request.url));
+        }
+    }
+
 
     // user trying to access common protected route > allow
     if (routerOwner === "COMMON") {
