@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui
 
 interface AppointmentBarChartProps {
     data : BarChartData[]
-}
+} 
 
 const AppointmentBarChart = ({data}: AppointmentBarChartProps) => {
 

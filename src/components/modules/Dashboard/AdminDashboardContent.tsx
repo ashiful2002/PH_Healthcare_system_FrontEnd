@@ -3,7 +3,7 @@
 import AppointmentBarChart from "@/components/shared/AppointmentBarChart"
 import AppointmentPieChart from "@/components/shared/AppointmentPieChart"
 import StatsCard from "@/components/shared/StatsCard"
-import { getDashboardData } from "@/services/dashboard.services"
+import { getDashboardData } from "@/services/dashboard.service"
 import { ApiResponse } from "@/types/api.types"
 import { IAdminDashboardData } from "@/types/dashboard.types"
 import { useQuery } from "@tanstack/react-query"
@@ -17,8 +17,9 @@ const AdminDashboardContent = () => {
 
   const { data } = adminDashboardData as ApiResponse<IAdminDashboardData>;
   //http://localhost:5000/api/v1/doctors?page=1&limit=2&searchTerm=ortho&appointmentFee[gt]=1000&appointmentFee[lte]=1500&fields=name,email&sortBy=user.name.firstName&sortOrder=asc&experience[gt]=7&include=specialties&user.role=DOCTOR&specialties.specialty.title=Neurology&gender=MALE&specialties.specialty.title=Cardiology2
+
   return (
-    <div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       <StatsCard
         title="Total Appointments"
         value={data?.appointmentCount || 0}
@@ -32,9 +33,11 @@ const AdminDashboardContent = () => {
         description="Number of patients registered"
       />
 
+
       <AppointmentBarChart data={data?.barChartData || []} />
 
       <AppointmentPieChart data={data?.pieChartData || []} />
+
     </div>
   );
 }
