@@ -59,22 +59,36 @@ export const getRouteOwner = (pathname: string) => {
     return null;
 }
 
-export const getDefaultDashboardRoute = (role: UserRole) => {
-    switch (role) {
-        case "DOCTOR":
-            return "/doctor/dashboard"
-        case "ADMIN":
-            return "/admin/dashboard"
-        case "PATIENT":
-            return "/dashboard"
-        case "COMMON":
-            return "/my-profile"
-        default:
-            return "/"
+// export const getDefaultDashboardRoute = (role: UserRole) => {
+//     switch (role) {
+//         case "DOCTOR":
+//             return "/doctor/dashboard"
+//         case "ADMIN":
+//             return "/admin/dashboard"
+//         case "PATIENT":
+//             return "/dashboard"
+//         case "COMMON":
+//             return "/my-profile"
+//         default:
+//             return "/"
+//     }
+
+// }
+
+
+export const getDefaultDashboardRoute = (role : UserRole) => {
+    if(role === "ADMIN" || role === "SUPER_ADMIN") {
+        return "/admin/dashboard";
+    }
+    if(role === "DOCTOR") {
+        return "/doctor/dashboard";
+    }
+    if(role === "PATIENT") {
+        return "/dashboard";
     }
 
+    return "/";
 }
-
 
 export const isValidRedirectForRole = (redirectPath: string, role: UserRole) => {
     const unifiedSuperAdminRole = role === "SUPER_ADMIN" ? "ADMIN" : role;
