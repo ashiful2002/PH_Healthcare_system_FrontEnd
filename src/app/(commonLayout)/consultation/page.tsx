@@ -7,10 +7,10 @@ const ConsultationPage = async () => {
 
     await queryClient.prefetchQuery({
         queryKey: ['doctors'],
-        queryFn: getDoctors,
+        queryFn: () => getDoctors(""),
     })
 
-    
+
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
             <DoctorsList />

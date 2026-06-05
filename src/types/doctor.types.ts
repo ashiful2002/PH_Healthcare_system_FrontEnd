@@ -21,7 +21,7 @@ export interface IDoctor {
     registrationNumber: string;
     experience?: number;
     gender: Gender;
-    appointmentFee: number;
+    appointMentFee: number;
     qualification: string;
     currentWorkingPlace: string;
     designation: string;
@@ -30,7 +30,6 @@ export interface IDoctor {
     user : {
         status : UserStatus
     };
-    
     specialties : Array<{
         specialtyId : string;
         doctorId : string;
@@ -132,9 +131,9 @@ export interface IDoctorAppointmentItem {
     } | null;
 }
 
-// export interface IDoctorDetails extends IDoctor {
-//     user: IDoctorUserDetails;
-//     appointments?: IDoctorAppointmentItem[];
-//     doctorSchedules?: IDoctorScheduleItem[];
-//     reviews?: IDoctorReview[];
-// }
+export interface IDoctorDetails extends IDoctor {
+    user: IDoctorUserDetails;
+    appointments?: IDoctorAppointmentItem[];
+    doctorSchedules?: IDoctorScheduleItem[];
+    reviews?: IDoctorReview[];
+}

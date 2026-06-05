@@ -1,7 +1,7 @@
 "use client"
 import { loginAction } from "@/app/(commonLayout)/(authRouteGroup)/login/_action";
 import AppField from "@/components/shared/form/AppField";
-import AppSubmitButton from "@/components/shared/form/AppSubmitBUtton";
+import AppSubmitButton from "@/components/shared/form/AppSubmitButton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";

@@ -8,8 +8,7 @@ const DoctorsList = () => {
     queryKey: ['doctors'],
     queryFn: () => getDoctors(),
   })
- 
-  return (
+   return (
     <div>
       {data?.data?.map((doctor: any) => (
         <div key={doctor.id}>{doctor.name}</div>
